@@ -14,7 +14,7 @@
     "barrelbot": "bin/barrelbot"
   },
   "scripts": {
-    "compile": "tsc -p ."
+    "build": "tsc -p ."
   },
   "keywords": [
     "TypeScript",
