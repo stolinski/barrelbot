@@ -21,7 +21,12 @@ export function checkDir(pathToDir: string, extension: FILETYPE) {
         );
       indexFilePath = x;
     } else {
-      allFilesExceptIndex.push(x);
+      if (
+        x.split('.').length === 2 && // ignore anything with two dots in the filename eg foo.test.js or bar.stories.js
+        x[0] !== '.' // ignore dotfiles
+      ) {
+        allFilesExceptIndex.push(x);
+      }
     }
   });
   const hasIndexFile = !!indexFilePath;

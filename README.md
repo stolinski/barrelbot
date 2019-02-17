@@ -23,6 +23,11 @@ Then in your project, assuming you want to generate barrel files in `/src`:
 barrelbot watch src
 ```
 
+It ignores files that you would normally want to ignore based on `.` in the filename, e.g.:
+
+- two or more dots e.g. `foo.stories.js` or `bar.spec.ts`
+- starting with a dog e.g. `.somedotfile`
+
 ## `--ext {js, jsx, ts, tsx}`: Extensions
 
 By default barrelbot assumes you want a `.tsx` extension. you can configure this with a `--extension` or `--ext` flag:
