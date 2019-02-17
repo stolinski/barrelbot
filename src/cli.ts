@@ -1,52 +1,53 @@
 #! /usr/bin/env node
 import fs from 'fs';
+import Yargs from 'yargs';
 import path from 'path';
 import chokidar from 'chokidar';
-import Yargs from 'yargs';
 import { checkDir } from './checks/checkDir';
 import { writeIndex } from './writes/writeIndex';
 import { isIndexFile } from './checks/checkIndexFile';
+import { INDEXEXTENSIONS, FILETYPE } from './types';
 
 const builder = (yargs: Yargs.Argv<{}>) => {
-  // console.log('builder', yargs);
-  return yargs.positional('folder', {
-    describe: 'folder',
-    default: 'src'
-  });
+  return yargs
+    .positional('folder', {
+      describe: 'folder',
+      default: 'src'
+    })
+    .option('extension', {
+      alias: 'ext',
+      describe: 'the extension of the barrel file, default tsx',
+      default: 'tsx'
+    });
 };
 type HType = {
   [argName: string]: unknown;
   _: string[];
   $0: string;
 };
-const handler = () =>
-  // argv: HType
-  {
-    // console.log('handler', argv);
-    // if (argv.verbose) console.info(`start server on :${argv.port}`);
-    // serve(argv.port);
-  };
-
+const handler = (/* argv: HType */) => {
+  // console.log('handler', argv);
+};
 async function run() {
   const temp: HType = Yargs
-    // list of stuff
-    .command('watch [folder]', 'have a watcher', builder, handler)
-    .option('verbose', {
-      alias: 'v',
-      default: false
-    }).argv;
-  // console.log(temp);
+    // list of
+    .command('watch [folder]', 'have a watcher', builder, handler).argv;
+  console.log({ temp });
   // { _: [ 'watch' ],
-  // verbose: false,
-  // v: false,
   // folder: 'testfolder',
   // '$0': '/usr/local/bin/barrelbot' }
   const srcfolder = temp.folder as string;
-  // const src = (s: string) => path.join(srcfolder, s);
   if (!fs.existsSync(srcfolder)) {
     return console.error(`path '${srcfolder}' does not exist, terminating...`);
   }
-  const EXTENSION = 'ts'; // TODO: PARAMETERIZE
+  const EXTENSION = temp.extension as FILETYPE;
+  if (!INDEXEXTENSIONS.includes(EXTENSION)) {
+    console.error(
+      `invalid --extension option detected. Pick from `,
+      INDEXEXTENSIONS
+    );
+    return 'early termination';
+  }
   // Something to use when events are received.
   const log = console.log.bind(console);
   let isLoading = true;
