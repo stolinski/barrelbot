@@ -28,13 +28,84 @@ It ignores files that you would normally want to ignore based on `.` in the file
 - two or more dots e.g. `foo.stories.js` or `bar.spec.ts`
 - starting with a dog e.g. `.somedotfile`
 
-## `--ext {js, jsx, ts, tsx}`: Extensions
+## Option: `--ext {js, jsx, ts, tsx}`
 
-By default barrelbot assumes you want a `.tsx` extension. you can configure this with a `--extension` or `--ext` flag:
+By default barrelbot assumes you want to use and output a `.tsx` extension. you can configure this with a `--extension` or `--ext` flag:
 
 ```
 barrelbot watch src --extension js
 ```
+
+## Option: `--namespace {none, all, defaultOnly}`
+
+By default barrelbot assumes you export everything without a namespace, so it generates exports like:
+
+```js
+// index.js
+export * from './foo';
+```
+
+This is (subjectively) ideal so as not to clutter the autocomplete space for IDEs. however, many people understandably have different styles, so you can configure this with a `--namespace` or `--n` flag:
+
+`all`:
+
+````js
+// barrelbot watch myFolder --namespace all
+```js
+// index.js
+import * as foo from './foo'
+export {foo}
+````
+
+`defaultOnly`:
+
+````js
+// barrelbot watch myFolder --namespace defaultOnly
+```js
+// index.js
+export {default as foo} from './foo'
+````
+
+## Visualizing what it does
+
+Given a file structure like
+
+```
+- someFolder
+- myWatchedFolder
+  - components
+    - Header
+      - Logo.tsx
+      - Title.tsx
+      - Logo.test.tsx
+    - Main.tsx
+    - Button.tsx
+    - Button.spec.ts
+  - App.tsx
+  - .somedotfile
+```
+
+When you run `barrelbot watch myWatchedFolder`, it results in:
+
+```
+- someFolder
+- myWatchedFolder
+  - components
+    - Header
+      - Logo.tsx
+      - Title.tsx
+      - Logo.test.tsx
+      - index.tsx
+    - Main.tsx
+    - Button.tsx
+    - Button.spec.ts
+    - index.tsx
+  - App.tsx
+  - .somedotfile
+  - index.tsx
+```
+
+while ignoring the `*.test.tsx`, `*.spec.ts`, and `.somedotfile`.
 
 ## Tip!
 

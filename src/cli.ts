@@ -6,7 +6,7 @@ import chokidar from 'chokidar';
 import { checkDir } from './checks/checkDir';
 import { writeIndex } from './writes/writeIndex';
 import { isIndexFile } from './checks/checkIndexFile';
-import { INDEXEXTENSIONS, FILETYPE } from './types';
+import { INDEXEXTENSIONS, FILETYPE, NAMESPACETYPE } from './types';
 
 const builder = (yargs: Yargs.Argv<{}>) => {
   return yargs
@@ -18,7 +18,19 @@ const builder = (yargs: Yargs.Argv<{}>) => {
       alias: 'ext',
       describe: 'the extension of the barrel file, default tsx',
       default: 'tsx'
+    })
+    .option('namespace', {
+      alias: 'n',
+      describe:
+        'when writing barrel, place all of each file in its own namespace, or only default exports, or no namespace (default)',
+      choices: ['none', 'all', 'defaultOnly'],
+      default: 'none'
     });
+  // (, {
+  //   alias: 'n',
+  //   describe: `whether to namespace exports e.g. export { default as Input } from './input', default no`,
+  //   default: false
+  // });
 };
 type HType = {
   [argName: string]: unknown;
@@ -31,7 +43,14 @@ const handler = (/* argv: HType */) => {
 async function run() {
   const temp: HType = Yargs
     // list of
-    .command('watch [folder]', 'have a watcher', builder, handler).argv;
+    .command(
+      'watch [folder]',
+      'start watching a folder and building barrels',
+      builder,
+      handler
+    )
+    .demandCommand()
+    .help().argv;
   console.log({ temp });
   // { _: [ 'watch' ],
   // folder: 'testfolder',
@@ -40,6 +59,7 @@ async function run() {
   if (!fs.existsSync(srcfolder)) {
     return console.error(`path '${srcfolder}' does not exist, terminating...`);
   }
+  const NAMESPACE = temp.namespace as NAMESPACETYPE;
   const EXTENSION = temp.extension as FILETYPE;
   if (!INDEXEXTENSIONS.includes(EXTENSION)) {
     console.error(
@@ -48,6 +68,10 @@ async function run() {
     );
     return 'early termination';
   }
+  const configs = {
+    NAMESPACE,
+    EXTENSION
+  };
   // Something to use when events are received.
   const log = console.log.bind(console);
   let isLoading = true;
@@ -67,7 +91,7 @@ async function run() {
         } else {
           // rerun writeIndex
           const dirname = path.dirname(_path);
-          writeIndex(dirname, EXTENSION);
+          writeIndex(dirname, configs);
         }
       }
     })
@@ -88,7 +112,7 @@ async function run() {
             EXTENSION
           );
           if (allFilesExceptIndex.length) {
-            writeIndex(dirname, EXTENSION);
+            writeIndex(dirname, configs);
           } else {
             // there is no longer any linkable file, lets delete index file as well if exists
             if (hasIndexFile) {
@@ -126,7 +150,7 @@ async function run() {
         `Scanned and validated ${srcfolder}. Checking and writing barrels...`
       );
       isLoading = false;
-      await Promise.all(watchedDirs.map(dir => writeIndex(dir, EXTENSION)));
+      await Promise.all(watchedDirs.map(dir => writeIndex(dir, configs)));
       log(`Watching for changes...`);
     });
   // // unused

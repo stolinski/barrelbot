@@ -4,3 +4,4 @@ export const COMMENTSTRING =
 export type FILETYPE = 'js' | 'jsx' | 'ts' | 'tsx';
 export const INDEXEXTENSIONS = ['js', 'ts', 'jsx', 'tsx'];
 export const INDEXFILES = INDEXEXTENSIONS.map(x => 'index.' + x);
+export type NAMESPACETYPE = 'none' | 'all' | 'defaultOnly';
