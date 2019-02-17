@@ -49,22 +49,20 @@ However, many people understandably have different styles (open an issue if you 
 
 `all`:
 
-````js
-// barrelbot watch myFolder --namespace all
 ```js
+// barrelbot watch myFolder --namespace all
 // index.js
-import * as foo from './foo'
-export {foo}
-````
+import * as foo from './foo';
+export { foo };
+```
 
 `defaultOnly`:
 
-````js
-// barrelbot watch myFolder --namespace defaultOnly
 ```js
+// barrelbot watch myFolder --namespace defaultOnly
 // index.js
-export {default as foo} from './foo'
-````
+export { default as foo } from './foo';
+```
 
 ## Visualizing what it does
 
