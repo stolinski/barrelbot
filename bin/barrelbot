@@ -6,13 +6,13 @@ var devMode = require('fs').existsSync(`${__dirname}/../src`);
 // or want to "force" running the compiled version with --compiled-build
 var wantsCompiled = process.argv.indexOf('--compiled-build') >= 0;
 
-console.log('hihihi');
+console.log('starting barrelbot...');
 if (wantsCompiled || !devMode) {
-  console.log('production');
+  console.log('barrelbot: production');
   // this runs from the compiled javascript source
   require(`${__dirname}/../build/cli`).run(process.argv);
 } else {
-  console.log('devmode');
+  console.log('barrelbot: devmode');
   // this runs from the typescript source (for dev only)
   // hook into ts-node so we can run typescript on the fly
   require('ts-node').register({ project: `${__dirname}/../tsconfig.json` });
