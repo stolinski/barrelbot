@@ -45,7 +45,7 @@ By default barrelbot assumes you export everything without a namespace, so it ge
 export * from './foo';
 ```
 
-This is (subjectively) ideal so as not to clutter the autocomplete space for IDEs. however, many people understandably have different styles, so you can configure this with a `--namespace` or `--n` flag:
+However, many people understandably have different styles (open an issue if you have a strong opinion on what the default should be), so you can configure this with a `--namespace` or `--n` flag:
 
 `all`:
 
