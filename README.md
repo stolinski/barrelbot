@@ -41,6 +41,7 @@ barrelbot watch src --extension js
 By default barrelbot assumes you export everything without a namespace, so it generates exports like:
 
 ```js
+// barrelbot watch myFolder
 // index.js
 export * from './foo';
 ```
