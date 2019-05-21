@@ -1,6 +1,6 @@
 {
   "name": "barrelbot",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "a small utility to maintain barrel files",
   "main": "index.js",
   "repository": "https://github.com/sw-yx/barrelbot.git",
